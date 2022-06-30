@@ -1,4 +1,5 @@
 package dataaccess;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,19 +7,18 @@ import java.io.Serializable;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import business.Book;
-import business.BookCopy;
-import business.LibraryMember;
+import business.*;
 import dataaccess.DataAccessFacade.StorageType;
 
 
 public class DataAccessFacade implements DataAccess {
 	
 	enum StorageType {
-		BOOKS, MEMBERS, USERS, BOOKCOPY;
+		BOOKS, MEMBERS, USERS, BOOKCOPY, CHECKOUT;
 	}
 	
 	public static final String OUTPUT_DIR = System.getProperty("user.dir") 
@@ -172,4 +172,52 @@ public class DataAccessFacade implements DataAccess {
 		private static final long serialVersionUID = 5399827794066637059L;
 	}
 	
+    @Override
+    public void deleteBook(String isbn) {
+        HashMap<String, Book> books = readBooksMap();
+        books.remove(isbn);
+        List<Book> retval = new ArrayList<>();
+        retval.addAll(books.values());
+        loadBookMap(retval);
+    }
+
+    @Override
+    public HashMap<String, CheckoutRecordEntry> readCheckoutRecordMap() {
+        return (HashMap<String, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUT);
+    }
+
+    @Override
+    public boolean createCheckOut(CheckOutRecord checkOutRecord) {
+        HashMap<String, CheckoutRecordEntry> checkOut = new HashMap();
+        if(readCheckoutRecordMap()!=null) {
+            checkOut.putAll(readCheckoutRecordMap());
+        }
+        for (CheckoutRecordEntry record : checkOutRecord.getCheckoutEntries()) {
+            checkOut.put(checkOutRecord.getMemberID(), record);
+        }
+        return saveToStorage(StorageType.CHECKOUT, checkOut);
+    }
+
+    /////load methods - these place test data into the storage area
+    ///// - used just once at startup
+
+    static boolean saveToStorage(StorageType type, Object ob) {
+        ObjectOutputStream out = null;
+        try {
+            Path path = FileSystems.getDefault().getPath(OUTPUT_DIR, type.toString());
+            out = new ObjectOutputStream(Files.newOutputStream(path));
+            out.writeObject(ob);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }

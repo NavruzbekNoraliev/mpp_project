@@ -3,7 +3,6 @@ package dataaccess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import business.Address;
 import business.Author;
 import business.Book;
@@ -17,8 +16,6 @@ import business.LibraryMember;
  * once) before the rest of the application can work properly.
  * It will create three serialized objects in the dataaccess.storage
  * folder.
- * 
- *
  */
 public class TestData {
 	
@@ -32,8 +29,7 @@ public class TestData {
 		DataAccess da = new DataAccessFacade();
 		System.out.println(da.readBooksMap());
 		System.out.println(da.readUserMap());
-		System.out.println(da.readBookCopysMap());
-		
+		System.out.println(da.readBookCopysMap());		
 	}
 	///create books
 	public void bookData() {
