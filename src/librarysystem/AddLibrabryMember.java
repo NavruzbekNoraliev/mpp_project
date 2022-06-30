@@ -142,6 +142,8 @@ public class AddLibrabryMember extends JFrame implements LibWindow {
 					LibraryMember l = new LibraryMember(IdValue.getText(), FirstNameValue.getText(),
 							LastNameValue.getText(), TelefoneValue.getText(), a);
 					daf.saveNewMember(l);
+					JOptionPane.showMessageDialog(saveButton, "Member Saved!", "Success", 1);
+                    cleanFields();
 				} catch (Exception ex) {
 					System.out.println(ex.getMessage());
 					JOptionPane.showMessageDialog(saveButton, ex.getMessage(), "error", 1);
@@ -155,26 +157,7 @@ public class AddLibrabryMember extends JFrame implements LibWindow {
 		contentPane.add(saveButton);
 		contentPane.add(backButton);
 		addBackButtonListener(backButton);
-
-        JButton saveButton = new JButton("Save");
-        JButton backButton = new JButton("Back");
-        saveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    validateEmptyFields();
-                    Address a = new Address(StreetValue.getText(), CityValue.getText(), StateValue.getText(), ZipValue.getText());
-                    LibraryMember l = new LibraryMember(IdValue.getText(), FirstNameValue.getText(), LastNameValue.getText(), TelefoneValue.getText(), a);
-                    daf.saveNewMember(l);
-                    JOptionPane.showMessageDialog(saveButton, "Member Saved!", "Success", 1);
-                    cleanFields();
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
-                    JOptionPane.showMessageDialog(saveButton, ex.getMessage(), "error", 1);
-                }
-            }
-        });
 		exceptions = new JOptionPane();
-
 		contentPane.add(exceptions);
 	}
 
