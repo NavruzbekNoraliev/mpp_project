@@ -1,6 +1,6 @@
 package librarysystem;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
@@ -14,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import business.ControllerInterface;
 import business.SystemController;
@@ -28,7 +29,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JMenuItem login, allBookIds, allMemberIds, addLibraryMember, addBookCopy; 
     String pathToImage;
     private boolean isInitialized = false;
-    
+
+
+
+	UIManager UI=new UIManager();
+
     private static LibWindow[] allWindows = { 
     	LibrarySystem.INSTANCE,
 		LoginWindow.INSTANCE,
@@ -57,7 +62,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		//pack();
 		setSize(660,500);
 		isInitialized = true;
-    }
+	}
     
     private void formatContentPane() {
 		mainPanel = new JPanel();
@@ -67,12 +72,15 @@ public class LibrarySystem extends JFrame implements LibWindow {
     
     private void setPathToImage() {
     	String currDirectory = System.getProperty("user.dir");
-    	pathToImage = currDirectory+"\\src\\librarysystem\\library.jpg";
-    }
+    	pathToImage = currDirectory
+//				+"\\src\\librarysystem\\library.jpg";
+				+"/src/librarysystem/libr.jpeg";
+
+	}
     
     private void insertSplashImage() {
-        ImageIcon image = new ImageIcon(pathToImage);
-		mainPanel.add(new JLabel(image));	
+		ImageIcon image = new ImageIcon(pathToImage);
+		mainPanel.add(new JLabel(image));
     }
     private void createMenus() {
     	menuBar = new JMenuBar();
@@ -84,7 +92,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     private void addMenuItems() {
        options = new JMenu("Options");  
  	   menuBar.add(options);
- 	   login = new JMenuItem("Login");
+ 	   login = new JMenuItem("Logout");
  	   login.addActionListener(new LoginListener());
  	   allBookIds = new JMenuItem("All Book Ids");
  	   allBookIds.addActionListener(new AllBookIdsListener());
@@ -112,7 +120,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			LoginWindow.INSTANCE.init();
 			Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
 			LoginWindow.INSTANCE.setVisible(true);
-			
 		}
     	
     }
@@ -206,7 +213,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	@Override
 	public void isInitialized(boolean val) {
 		isInitialized =val;
-		
 	}
     
 }

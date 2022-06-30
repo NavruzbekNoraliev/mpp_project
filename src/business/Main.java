@@ -30,6 +30,7 @@ public class Main {
 		Collection<LibraryMember> members = da.readMemberMap().values();
 		List<LibraryMember> mems = new ArrayList<>();
 		mems.addAll(members);
+		System.out.println(mems);
 		//implement
 		return null;
 		
