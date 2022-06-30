@@ -35,15 +35,6 @@ public class DataAccessFacade implements DataAccess {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public HashMap<String,BookCopy> readBookCopysMap() {
-		//Returns a Map with name/value pairs being
-		//   isbn -> Book
-		HashMap<String,BookCopy> ret = (HashMap<String,BookCopy>)readFromStorage(StorageType.BOOKCOPY);
-		return ret;
-	}
-	
-	
-	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {
 		//Returns a Map with name/value pairs being
 		//   isbn -> Book
@@ -68,25 +59,18 @@ public class DataAccessFacade implements DataAccess {
 	
 	/////load methods - these place test data into the storage area
 	///// - used just once at startup  
-	
-	public static void SaveBookCopyMap(List<BookCopy> bookCopyList) {
-		HashMap<String, BookCopy> bookCopys = new HashMap<String, BookCopy>();
-		bookCopyList.forEach(bookcopy -> bookCopys.put(bookcopy.getBook().getIsbn(), bookcopy));
-		saveToStorage(StorageType.BOOKCOPY, bookCopys);
-	}
-	
+
 	public void AddCopyAndSaveToStorage(String isbn) {
 		//retrieve the HashMap<String, Book>() of copy from storage
 		//change the copy of the book and save again
-		HashMap<String, BookCopy> bookcopyes = readBookCopysMap();
-		Book b = bookcopyes.get(isbn).getBook();
+		HashMap<String, Book> books = readBooksMap();
+		Book b = books.get(isbn);
 		b.addCopy();
 		//change the copy from inside the book
-		bookcopyes.put(isbn, b.getCopy(b.getCopies().length));
+		books.put(isbn, b);
 		
-		saveToStorage(StorageType.BOOKCOPY, bookcopyes);
+		saveToStorage(StorageType.BOOKS, books);
 	}
-	
 		
 	static void loadBookMap(List<Book> bookList) {
 		HashMap<String, Book> books = new HashMap<String, Book>();
