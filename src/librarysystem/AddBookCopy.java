@@ -43,22 +43,6 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 	private String isbnBookSelected;
 	private JOptionPane exceptions = new JOptionPane();
 	
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		try {
-//			AddBookCopy dialog = new AddBookCopy();
-//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//			dialog.setVisible(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-	/**
-	 * Create the dialog.
-	 */
 	private AddBookCopy() {
 		
 	}
@@ -113,11 +97,13 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 		contentPanel.add(btnAddCopy);
 		btnAddCopy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(NumberOfCopyes.getText() == null)
+				if(NumberOfCopyes.getText().isEmpty())
 					JOptionPane.showMessageDialog(btnAddCopy, "Need to select one record", "error", 1);
-				DataAccessFacade da = new DataAccessFacade();
-				da.AddCopyAndSaveToStorage(isbnBookSelected);
-				refreshNumCopyes();
+				else {
+					DataAccessFacade da = new DataAccessFacade();
+					da.AddCopyAndSaveToStorage(isbnBookSelected);
+					refreshNumCopyes();
+				}
 			}
 		});
 		
@@ -130,20 +116,22 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Back");
 				cancelButton.setActionCommand("Cancel");
+				addBackButtonListener(cancelButton);
 				buttonPane.add(cancelButton);
 			}
 		}
 		contentPanel.add(exceptions);
 
 	}
+	
+	private void addBackButtonListener(JButton button) {
+        button.addActionListener(evt -> {
+            LibrarySystem.hideAllWindows();
+            LibrarySystem.INSTANCE.setVisible(true);
+        });
+    }
 	
 	public void refreshNumCopyes() {
 		DataAccess da = new DataAccessFacade();

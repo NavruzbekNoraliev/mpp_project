@@ -221,14 +221,14 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
     class AddLibrabryMemberListener implements ActionListener {
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            LibrarySystem.hideAllWindows();
-            AddLibrabryMember.INSTANCE.init();
-            AddLibrabryMember.INSTANCE.pack();
-            centerFrameOnDesktop(AddLibrabryMember.INSTANCE);
-            AddLibrabryMember.INSTANCE.setVisible(true);
-        }
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            LibrarySystem.hideAllWindows();
+//            AddLibrabryMember.INSTANCE.init();
+//            AddLibrabryMember.INSTANCE.pack();
+//            centerFrameOnDesktop(AddLibrabryMember.INSTANCE);
+//            AddLibrabryMember.INSTANCE.setVisible(true);
+//        }
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

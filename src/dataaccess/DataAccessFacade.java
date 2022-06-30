@@ -105,23 +105,6 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.MEMBERS, members);
 	}
 	
-	static void saveToStorage(StorageType type, Object ob) {
-		ObjectOutputStream out = null;
-		try {
-			Path path = FileSystems.getDefault().getPath(OUTPUT_DIR, type.toString());
-			out = new ObjectOutputStream(Files.newOutputStream(path));
-			out.writeObject(ob);
-		} catch(IOException e) {
-			e.printStackTrace();
-		} finally {
-			if(out != null) {
-				try {
-					out.close();
-				} catch(Exception e) {}
-			}
-		}
-	}
-	
 	static Object readFromStorage(StorageType type) {
 		ObjectInputStream in = null;
 		Object retVal = null;
