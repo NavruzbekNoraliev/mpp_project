@@ -3,10 +3,10 @@ package dataaccess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import business.Address;
 import business.Author;
 import business.Book;
+import business.BookCopy;
 import business.LibraryMember;
 
 /**
@@ -16,8 +16,6 @@ import business.LibraryMember;
  * once) before the rest of the application can work properly.
  * It will create three serialized objects in the dataaccess.storage
  * folder.
- * 
- *
  */
 public class TestData {
 	
@@ -25,11 +23,13 @@ public class TestData {
 	public static void main(String[] args) {
 		TestData td = new TestData();
 		td.bookData();
+		td.bookCopyData();
 		td.libraryMemberData();
 		td.userData();
 		DataAccess da = new DataAccessFacade();
 		System.out.println(da.readBooksMap());
 		System.out.println(da.readUserMap());
+		System.out.println(da.readBookCopysMap());		
 	}
 	///create books
 	public void bookData() {
@@ -40,6 +40,17 @@ public class TestData {
 		allBooks.get(2).addCopy();
 		allBooks.get(2).addCopy();
 		DataAccessFacade.loadBookMap(allBooks);
+	}
+	//Save copy of Books
+	public void bookCopyData() {
+		List<BookCopy> allCopys = new ArrayList<BookCopy>();
+		for(Book book : allBooks) {
+			for(BookCopy copy: book.getCopies()) {
+				allCopys.add(copy);
+			}
+		}
+		
+		DataAccessFacade.SaveBookCopyMap(allCopys);
 	}
 	
 	public void userData() {
@@ -102,7 +113,7 @@ public class TestData {
 	@SuppressWarnings("serial")
 	List<User> allUsers = new ArrayList<User>() {
 		{
-			add(new User("Navruzbek", "111", Auth.LIBRARIAN));
+			add(new User("q", "1", Auth.LIBRARIAN));
 			add(new User("102", "abc", Auth.ADMIN));
 			add(new User("103", "111", Auth.BOTH));
 		}

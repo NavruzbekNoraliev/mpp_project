@@ -1,4 +1,5 @@
 package dataaccess;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,19 +7,18 @@ import java.io.Serializable;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import business.Book;
-import business.BookCopy;
-import business.LibraryMember;
+import business.*;
 import dataaccess.DataAccessFacade.StorageType;
 
 
 public class DataAccessFacade implements DataAccess {
 	
 	enum StorageType {
-		BOOKS, MEMBERS, USERS;
+		BOOKS, MEMBERS, USERS, BOOKCOPY, CHECKOUT;
 	}
 	
 	public static final String OUTPUT_DIR = System.getProperty("user.dir") 
@@ -33,6 +33,15 @@ public class DataAccessFacade implements DataAccess {
 		mems.put(memberId, member);
 		saveToStorage(StorageType.MEMBERS, mems);	
 	}
+	
+	@SuppressWarnings("unchecked")
+	public HashMap<String,BookCopy> readBookCopysMap() {
+		//Returns a Map with name/value pairs being
+		//   isbn -> Book
+		HashMap<String,BookCopy> ret = (HashMap<String,BookCopy>)readFromStorage(StorageType.BOOKCOPY);
+		return ret;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {
@@ -57,9 +66,26 @@ public class DataAccessFacade implements DataAccess {
 		return (HashMap<String, User>)readFromStorage(StorageType.USERS);
 	}
 	
-	
 	/////load methods - these place test data into the storage area
 	///// - used just once at startup  
+	
+	public static void SaveBookCopyMap(List<BookCopy> bookCopyList) {
+		HashMap<String, BookCopy> bookCopys = new HashMap<String, BookCopy>();
+		bookCopyList.forEach(bookcopy -> bookCopys.put(bookcopy.getBook().getIsbn(), bookcopy));
+		saveToStorage(StorageType.BOOKCOPY, bookCopys);
+	}
+	
+	public void AddCopyAndSaveToStorage(String isbn) {
+		//retrieve the HashMap<String, Book>() of copy from storage
+		//change the copy of the book and save again
+		HashMap<String, BookCopy> bookcopyes = readBookCopysMap();
+		Book b = bookcopyes.get(isbn).getBook();
+		b.addCopy();
+		//change the copy from inside the book
+		bookcopyes.put(isbn, b.getCopy(b.getCopies().length));
+		
+		saveToStorage(StorageType.BOOKCOPY, bookcopyes);
+	}
 	
 		
 	static void loadBookMap(List<Book> bookList) {
@@ -82,23 +108,6 @@ public class DataAccessFacade implements DataAccess {
 	public Book getBookByIsbn(String isbn) {
 		HashMap<String, Book> books = readBooksMap();
 		return books.get(isbn);
-	}
-	
-	static void saveToStorage(StorageType type, Object ob) {
-		ObjectOutputStream out = null;
-		try {
-			Path path = FileSystems.getDefault().getPath(OUTPUT_DIR, type.toString());
-			out = new ObjectOutputStream(Files.newOutputStream(path));
-			out.writeObject(ob);
-		} catch(IOException e) {
-			e.printStackTrace();
-		} finally {
-			if(out != null) {
-				try {
-					out.close();
-				} catch(Exception e) {}
-			}
-		}
 	}
 	
 	static Object readFromStorage(StorageType type) {
@@ -151,4 +160,52 @@ public class DataAccessFacade implements DataAccess {
 		private static final long serialVersionUID = 5399827794066637059L;
 	}
 	
+    @Override
+    public void deleteBook(String isbn) {
+        HashMap<String, Book> books = readBooksMap();
+        books.remove(isbn);
+        List<Book> retval = new ArrayList<>();
+        retval.addAll(books.values());
+        loadBookMap(retval);
+    }
+
+    @Override
+    public HashMap<String, CheckoutRecordEntry> readCheckoutRecordMap() {
+        return (HashMap<String, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUT);
+    }
+
+    @Override
+    public boolean createCheckOut(CheckOutRecord checkOutRecord) {
+        HashMap<String, CheckoutRecordEntry> checkOut = new HashMap();
+        if(readCheckoutRecordMap()!=null) {
+            checkOut.putAll(readCheckoutRecordMap());
+        }
+        for (CheckoutRecordEntry record : checkOutRecord.getCheckoutEntries()) {
+            checkOut.put(checkOutRecord.getMemberID(), record);
+        }
+        return saveToStorage(StorageType.CHECKOUT, checkOut);
+    }
+
+    /////load methods - these place test data into the storage area
+    ///// - used just once at startup
+
+    static boolean saveToStorage(StorageType type, Object ob) {
+        ObjectOutputStream out = null;
+        try {
+            Path path = FileSystems.getDefault().getPath(OUTPUT_DIR, type.toString());
+            out = new ObjectOutputStream(Files.newOutputStream(path));
+            out.writeObject(ob);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
