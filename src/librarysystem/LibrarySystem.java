@@ -32,7 +32,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, checkoutBook, checkouts,addLibraryMember, addBookCopy;
+    JMenuItem login, allBookIds, allMemberIds, checkoutBook, checkouts, addLibraryMember, addBookCopy;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -40,8 +40,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
             LibrarySystem.INSTANCE,
             LoginWindow.INSTANCE,
             AllMemberIdsWindow.INSTANCE,
+            AddLibrabryMember.INSTANCE,
             AllBookIdsWindow.INSTANCE,
-            CheckoutBooksWindow.INSTANCE
+            CheckoutBooksWindow.INSTANCE,
+            AllCheckoutsWindow.INSTANCE,
+            AddBookCopy.INSTANCE
     };
 
     public static void hideAllWindows() {
@@ -74,24 +77,25 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     private void setPathToImage() {
-    	String currDirectory = System.getProperty("user.dir");
-    	pathToImage = currDirectory
+        String currDirectory = System.getProperty("user.dir");
+        pathToImage = currDirectory
 //				+"\\src\\librarysystem\\library.jpg";
-				+"/src/librarysystem/libr.jpeg";
+                + "/src/librarysystem/libr.jpeg";
 
-	}
-    
-    private void insertSplashImage() {
-		ImageIcon image = new ImageIcon(pathToImage);
-		mainPanel.add(new JLabel(image));
     }
+
+    private void insertSplashImage() {
+        ImageIcon image = new ImageIcon(pathToImage);
+        mainPanel.add(new JLabel(image));
+    }
+
     private void createMenus() {
         menuBar = new JMenuBar();
         menuBar.setBorder(BorderFactory.createRaisedBevelBorder());
         addMenuItems();
         setJMenuBar(menuBar);
     }
-    
+
     private void addMenuItems() {
         options = new JMenu("Options");
         menuBar.add(options);
@@ -105,29 +109,29 @@ public class LibrarySystem extends JFrame implements LibWindow {
         checkoutBook.addActionListener(new CheckoutBookListener());
         checkouts = new JMenuItem("Checkouts list");
         checkouts.addActionListener(new CheckoutsListener());
-		addLibraryMember = new JMenuItem("Add Library Member");
-		addLibraryMember.addActionListener(new AddLibrabryMemberListener());
+        addLibraryMember = new JMenuItem("Add Library Member");
+        addLibraryMember.addActionListener(new AddLibrabryMemberListener());
 
-		addBookCopy = new JMenuItem("Add Book Copy");
-		addBookCopy.addActionListener(new AddBookCopyListener());
+        addBookCopy = new JMenuItem("Add Book Copy");
+        addBookCopy.addActionListener(new AddBookCopyListener());
 
-		options.add(login);
+        options.add(login);
         options.add(allBookIds);
         options.add(allMemberIds);
-		options.add(addLibraryMember);
-		options.add(addBookCopy);
+        options.add(addLibraryMember);
+        options.add(addBookCopy);
         options.add(checkoutBook);
         options.add(checkouts);
     }
-    
+
     class LoginListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			LibrarySystem.hideAllWindows();
-			LoginWindow.INSTANCE.init();
-			Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
-			LoginWindow.INSTANCE.setVisible(true);
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            LoginWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
+            LoginWindow.INSTANCE.setVisible(true);
+        }
     }
 
     class CheckoutBookListener implements ActionListener {
@@ -157,7 +161,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
                 if (!sb.toString().contains(entry.getKey())) {
                     sb.append(entry.getKey() + "\n");
                 }
-                sb.append("  " + entry.getValue().getBook().getIsbn() + "  "+ entry.getValue().getBook().getTitle() + "  "+ entry.getValue().getBook().getNumCopies() + "\n");
+                sb.append("  " + entry.getValue().getBook().getIsbn() + "  " + entry.getValue().getBook().getTitle() + "  " + entry.getValue().getBook().getNumCopies() + "\n");
             }
 
             System.out.println(sb.toString());
@@ -172,71 +176,71 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
 
     class AllBookIdsListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			LibrarySystem.hideAllWindows();
-			AllBookIdsWindow.INSTANCE.init();
-			List<String> ids = ci.allBookIds();
-			Collections.sort(ids);
-			StringBuilder sb = new StringBuilder();
-			for(String s: ids) {
-				sb.append(s + "\n");
-			}
-			System.out.println(sb.toString());
-			AllBookIdsWindow.INSTANCE.setData(sb.toString());
-			AllBookIdsWindow.INSTANCE.pack();
-			Util.centerFrameOnDesktop(AllBookIdsWindow.INSTANCE);
-			AllBookIdsWindow.INSTANCE.setVisible(true);
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            AllBookIdsWindow.INSTANCE.init();
+            List<String> ids = ci.allBookIds();
+            Collections.sort(ids);
+            StringBuilder sb = new StringBuilder();
+            for (String s : ids) {
+                sb.append(s + "\n");
+            }
+            System.out.println(sb.toString());
+            AllBookIdsWindow.INSTANCE.setData(sb.toString());
+            AllBookIdsWindow.INSTANCE.pack();
+            Util.centerFrameOnDesktop(AllBookIdsWindow.INSTANCE);
+            AllBookIdsWindow.INSTANCE.setVisible(true);
+        }
     }
 
     class AllMemberIdsListener implements ActionListener {
-    	@Override
-		public void actionPerformed(ActionEvent e) {
-			LibrarySystem.hideAllWindows();
-			AllMemberIdsWindow.INSTANCE.init();
-			AllMemberIdsWindow.INSTANCE.pack();
-			AllMemberIdsWindow.INSTANCE.setVisible(true);
-			LibrarySystem.hideAllWindows();
-			AllBookIdsWindow.INSTANCE.init();
-			List<String> ids = ci.allMemberIds();
-			Collections.sort(ids);
-			StringBuilder sb = new StringBuilder();
-			for(String s: ids) {
-				sb.append(s + "\n");
-			}
-			System.out.println(sb.toString());
-			AllMemberIdsWindow.INSTANCE.setData(sb.toString());
-			AllMemberIdsWindow.INSTANCE.pack();
-			Util.centerFrameOnDesktop(AllMemberIdsWindow.INSTANCE);
-			AllMemberIdsWindow.INSTANCE.setVisible(true);
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            AllMemberIdsWindow.INSTANCE.init();
+            AllMemberIdsWindow.INSTANCE.pack();
+            AllMemberIdsWindow.INSTANCE.setVisible(true);
+            LibrarySystem.hideAllWindows();
+            AllBookIdsWindow.INSTANCE.init();
+            List<String> ids = ci.allMemberIds();
+            Collections.sort(ids);
+            StringBuilder sb = new StringBuilder();
+            for (String s : ids) {
+                sb.append(s + "\n");
+            }
+            System.out.println(sb.toString());
+            AllMemberIdsWindow.INSTANCE.setData(sb.toString());
+            AllMemberIdsWindow.INSTANCE.pack();
+            Util.centerFrameOnDesktop(AllMemberIdsWindow.INSTANCE);
+            AllMemberIdsWindow.INSTANCE.setVisible(true);
+        }
     }
 
-    class AddLibrabryMemberListener implements ActionListener{
+    class AddLibrabryMemberListener implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			LibrarySystem.hideAllWindows();
-			AddLibrabryMember.INSTANCE.init();
-			AddLibrabryMember.INSTANCE.pack();
-			centerFrameOnDesktop(AddLibrabryMember.INSTANCE);
-			AddLibrabryMember.INSTANCE.setVisible(true);
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            AddLibrabryMember.INSTANCE.init();
+            AddLibrabryMember.INSTANCE.pack();
+            centerFrameOnDesktop(AddLibrabryMember.INSTANCE);
+            AddLibrabryMember.INSTANCE.setVisible(true);
+        }
 
     }
 
-    class AddBookCopyListener implements ActionListener{
+    class AddBookCopyListener implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			LibrarySystem.hideAllWindows();
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
 
-			AddBookCopy.INSTANCE.init();
-			AddBookCopy.INSTANCE.pack();
-			AddBookCopy.INSTANCE.setVisible(true);
-		}
-    	
+            AddBookCopy.INSTANCE.init();
+            AddBookCopy.INSTANCE.pack();
+            AddBookCopy.INSTANCE.setVisible(true);
+        }
+
     }
 
     @Override

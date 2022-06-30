@@ -58,7 +58,8 @@ public class AllCheckoutsWindow extends JFrame implements LibWindow {
 	
 	public void defineLowerPanel() {
 		
-		JButton backToMainButn = new JButton("<= Back to Main");
+		JButton backToMainButn = new JButton("Back");
+		backToMainButn.setBounds(44, 138, 106, 35);
 		backToMainButn.addActionListener(new BackToMainListener());
 		lowerPanel = new JPanel();
 		lowerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));;

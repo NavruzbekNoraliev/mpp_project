@@ -96,7 +96,7 @@ public class DataAccessFacade implements DataAccess {
 
     static void loadUserMap(List<User> userList) {
         HashMap<String, User> users = new HashMap<String, User>();
-        userList.forEach(user -> users.put(user.getId(), user));
+        userList.forEach(user -> users.put(user.getUsername(), user));
         saveToStorage(StorageType.USERS, users);
     }
 

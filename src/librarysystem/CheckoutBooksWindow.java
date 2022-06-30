@@ -87,7 +87,13 @@ public class CheckoutBooksWindow extends JFrame implements LibWindow {
         dueDateField.setColumns(10);
 
         JButton btnNewButton = new JButton("Checkout Book");
-        btnNewButton.setBounds(44, 138, 169, 29);
+        JButton backButton = new JButton("Back");
+        btnNewButton.setBounds(200, 138, 169, 35);
+        backButton.setBounds(44, 138, 106, 35);
+        backButton.addActionListener(e -> {
+            LibrarySystem.hideAllWindows();
+            LibrarySystem.INSTANCE.setVisible(true);
+        });
         btnNewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -167,6 +173,7 @@ public class CheckoutBooksWindow extends JFrame implements LibWindow {
             }
         });
         mainPane.add(btnNewButton);
+        mainPane.add(backButton);
         //getContentPane().add(mainPane);
         isInitialized = true;
     }
