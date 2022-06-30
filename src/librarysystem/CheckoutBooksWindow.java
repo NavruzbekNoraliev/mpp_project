@@ -108,6 +108,19 @@ public class CheckoutBooksWindow extends JFrame implements LibWindow {
                         if (validateDate(checkout_date)) {
                             if (validateDate(due_date)) {
                                 Book book = getBook(isbn, daf);
+                                boolean flag = false;
+                                for (int i = 0; i < book.getCopies().length; i++) {
+                                    if (book.getCopies()[i].isAvailable()) {
+                                        book.getCopies()[0].changeAvailability();
+                                        flag = true;
+                                        break;
+                                    }
+
+                                }
+                                if(!flag){
+                                    JOptionPane.showMessageDialog(btnNewButton, "No copies are available to checkout", "Error", 1);
+                                }
+
                                 CheckOutRecord cr = new CheckOutRecord(id, new ArrayList<>() {
                                     {
                                         add(new CheckoutRecordEntry(LocalDate.of(Integer.parseInt(checkout_date.split("/")[2]),
@@ -119,7 +132,8 @@ public class CheckoutBooksWindow extends JFrame implements LibWindow {
                                     }
                                 });
                                 if (daf.createCheckOut(cr)) {
-                                    ci.deleteBook(book.getIsbn());
+
+                                    //ci.deleteBook(book.getIsbn());
                                     LibrarySystem.hideAllWindows();
                                     LibrarySystem.INSTANCE.setVisible(true);
                                     JOptionPane.showMessageDialog(btnNewButton, "Book named " + book.getTitle() + " is successfully checked out", "Success", 1);

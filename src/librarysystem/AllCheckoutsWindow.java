@@ -50,7 +50,7 @@ public class AllCheckoutsWindow extends JFrame implements LibWindow {
 		middlePanel = new JPanel();
 		FlowLayout fl = new FlowLayout(FlowLayout.CENTER, 25, 25);
 		middlePanel.setLayout(fl);
-		textArea = new TextArea(8, 20);
+		textArea = new TextArea(8, 50);
 		//populateTextArea();
 		middlePanel.add(textArea);
 		
