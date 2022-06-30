@@ -13,9 +13,6 @@ import javax.swing.JOptionPane;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 
 import business.Address;
 import business.LibraryMember;
