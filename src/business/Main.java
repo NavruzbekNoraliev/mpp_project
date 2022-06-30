@@ -20,6 +20,7 @@ public class Main {
 		List<LibraryMember> mems = new ArrayList<>();
 		mems.addAll(members);
 		//implement
+		System.out.println(mems);
 		return null;
 		
 	}
@@ -41,6 +42,8 @@ public class Main {
 		List<Book> bs = new ArrayList<>();
 		bs.addAll(books);
 		//implement
+		System.out.println(bs);
+		
 		return null;
 		
 		}
