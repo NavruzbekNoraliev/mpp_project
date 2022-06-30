@@ -27,14 +27,14 @@ import business.SystemController;
 
 import static librarysystem.Main.centerFrameOnDesktop;
 
-
 public class LibrarySystem extends JFrame implements LibWindow {
     ControllerInterface ci = new SystemController();
     public final static LibrarySystem INSTANCE = new LibrarySystem();
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, checkoutBook, checkouts, addLibraryMember, addBookCopy, addBook;
+    JMenuItem login, allBookIds, allMemberIds, checkOverdue, checkoutBook, checkouts, addLibraryMember, addBookCopy, addBook;
+
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -58,7 +58,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
         }
     }
 
-
     private LibrarySystem() {
     }
 
@@ -68,7 +67,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
         insertSplashImage();
 
         createMenus();
-        //pack();
+        // pack();
         setSize(660, 500);
         isInitialized = true;
     }
@@ -82,7 +81,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     private void setPathToImage() {
         String currDirectory = System.getProperty("user.dir");
         pathToImage = currDirectory
-//				+"\\src\\librarysystem\\library.jpg";
+                // +"\\src\\librarysystem\\library.jpg";
                 + "/src/librarysystem/libr.jpeg";
 
     }
@@ -102,8 +101,10 @@ public class LibrarySystem extends JFrame implements LibWindow {
     private void addMenuItems() {
         options = new JMenu("Options");
         menuBar.add(options);
-        login = new JMenuItem("Login");
+        login = new JMenuItem("Logout");
         login.addActionListener(new LoginListener());
+        checkOverdue = new JMenuItem("Check Overdue");
+        checkOverdue.addActionListener(new CheckOverDueListener());
         allBookIds = new JMenuItem("All Book Ids");
         allBookIds.addActionListener(new AllBookIdsListener());
         allMemberIds = new JMenuItem("All Member Ids");
@@ -126,6 +127,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
         options.add(login);
         options.add(allBookIds);
         options.add(allMemberIds);
+        options.add(checkOverdue);
         options.add(addLibraryMember);
         options.add(addBookCopy);
         options.add(addBook);
@@ -170,13 +172,14 @@ public class LibrarySystem extends JFrame implements LibWindow {
                 if (!sb.toString().contains(entry.getKey())) {
                     sb.append(entry.getKey() + "\n");
                 }
-                sb.append("  " + entry.getValue().getBook().getIsbn() + "  " + entry.getValue().getBook().getTitle() + "  " + entry.getValue().getBook().getNumCopies() + "\n");
+                sb.append("  " + entry.getValue().getBook().getIsbn() + "  " + entry.getValue().getBook().getTitle()
+                        + "  " + entry.getValue().getBook().getNumCopies() + "\n");
             }
 
             System.out.println(sb.toString());
             AllCheckoutsWindow.INSTANCE.setData(sb.toString());
             AllCheckoutsWindow.INSTANCE.pack();
-            //AllBookIdsWindow.INSTANCE.setSize(660,500);
+            // AllBookIdsWindow.INSTANCE.setSize(660,500);
             Util.centerFrameOnDesktop(AllCheckoutsWindow.INSTANCE);
             AllCheckoutsWindow.INSTANCE.setVisible(true);
 
@@ -200,6 +203,18 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AllBookIdsWindow.INSTANCE.pack();
             Util.centerFrameOnDesktop(AllBookIdsWindow.INSTANCE);
             AllBookIdsWindow.INSTANCE.setVisible(true);
+        }
+    }
+
+    class CheckOverDueListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            CheckOverdue.INSTANCE.init();
+            CheckOverdue.INSTANCE.setTitle("Check Overdue");
+            CheckOverdue.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            Util.centerFrameOnDesktop(CheckOverdue.INSTANCE);
+            CheckOverdue.INSTANCE.setVisible(true);
         }
     }
 
@@ -228,6 +243,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
     class AddLibrabryMemberListener implements ActionListener {
 
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
@@ -237,9 +253,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			centerFrameOnDesktop(LibrarySystem.INSTANCE);
 			AddLibrabryMember.INSTANCE.setVisible(true);
 		}
-    	
     }
-
+    	
     class AddBookCopyListener implements ActionListener {
 
         @Override
@@ -268,7 +283,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
     public boolean isInitialized() {
         return isInitialized;
     }
-
 
     @Override
     public void isInitialized(boolean val) {
