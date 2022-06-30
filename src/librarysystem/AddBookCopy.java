@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 
 import business.Address;
 import business.Book;
+import business.BookCopy;
 import business.LibraryMember;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
@@ -39,7 +40,9 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 	private JTextField NumberOfCopyes;
 	private boolean isInitialized = false;
 	public static final AddBookCopy INSTANCE = new AddBookCopy();
-
+	private String isbnBookSelected;
+	private JOptionPane exceptions = new JOptionPane();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -74,28 +77,12 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 		
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-//			List Mylist = new List();
-//			Mylist.setBounds(10, 11, 110, 208);
-//			Mylist.addMouseListener(new MouseAdapter() {
-//				public void mousePressed(MouseEvent me) {
-//					System.out.println(me.paramString());
-//				}
-//			});
-//			DataAccess da = new DataAccessFacade();
-//			Collection<Book> books = da.readBooksMap().values();
-//			for (Book b : books) {
-//				Mylist.add(b.getTitle());
-//			}
-//			contentPanel.add(Mylist);
-			
 			JComboBox<String> DropDown = new JComboBox<String>();
 			DropDown.setBounds(25, 25, 220, 20);
 			DataAccess da = new DataAccessFacade();
 			Collection<Book> books = da.readBooksMap().values();
-			HashMap<String,Book> li = da.readBooksMap();
-			
 			for (Book b : books) {
-				DropDown.addItem(b.getTitle());
+				DropDown.addItem(b.getIsbn());
 			}
 			DropDown.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent event) {
@@ -103,8 +90,10 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 
 	                Object selected = comboBox.getSelectedItem();
 	                System.out.println(selected);
-	                int num = li.get(selected).getNumCopies();
-                	NumberOfCopyes.setText(String.valueOf(num));
+	                isbnBookSelected = selected.toString().trim();
+	                //reload the number of copys
+	                refreshNumCopyes();
+                	
 	            }
 	        });
 			contentPanel.add(DropDown);
@@ -122,6 +111,15 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 		JButton btnAddCopy = new JButton("Add Copy");
 		btnAddCopy.setBounds(278, 56, 89, 23);
 		contentPanel.add(btnAddCopy);
+		btnAddCopy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(NumberOfCopyes.getText() == null)
+					JOptionPane.showMessageDialog(btnAddCopy, "Need to select one record", "error", 1);
+				DataAccessFacade da = new DataAccessFacade();
+				da.AddCopyAndSaveToStorage(isbnBookSelected);
+				refreshNumCopyes();
+			}
+		});
 		
 		JLabel lblNewLabel_2 = new JLabel("Select a Book:");
 		lblNewLabel_2.setBounds(25, 11, 99, 14);
@@ -143,7 +141,15 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 				buttonPane.add(cancelButton);
 			}
 		}
+		contentPanel.add(exceptions);
 
+	}
+	
+	public void refreshNumCopyes() {
+		DataAccess da = new DataAccessFacade();
+		HashMap<String,BookCopy> li = da.readBookCopysMap();
+        int num = li.get(isbnBookSelected).getCopyNum();
+    	NumberOfCopyes.setText(String.valueOf(num));
 	}
 
 	@Override

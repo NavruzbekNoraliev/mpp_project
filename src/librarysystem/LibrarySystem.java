@@ -1,5 +1,7 @@
 package librarysystem;
 
+import static librarysystem.Main.centerFrameOnDesktop;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -183,9 +185,10 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
-			
+	
 			AddLibrabryMember.INSTANCE.init();
 			AddLibrabryMember.INSTANCE.pack();
+			centerFrameOnDesktop(LibrarySystem.INSTANCE);
 			AddLibrabryMember.INSTANCE.setVisible(true);
 		}
     	
