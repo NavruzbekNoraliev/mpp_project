@@ -1,31 +1,18 @@
 package librarysystem;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.CardLayout;
-import java.awt.Dimension;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 
 import business.Address;
 import business.LibraryMember;
 import dataaccess.DataAccessFacade;
 
-import javax.swing.JTextField;
-import java.awt.Window.Type;
-import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import static librarysystem.Main.centerFrameOnDesktop;
 
 public class AddLibrabryMember extends JFrame implements LibWindow{
 
@@ -50,85 +37,104 @@ public class AddLibrabryMember extends JFrame implements LibWindow{
 
 	@Override
 	public void init() {
-		
+
 		INSTANCE.setTitle("Add Library Member");
 		INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		INSTANCE.setPreferredSize(new Dimension(500, 300));
+		INSTANCE.setPreferredSize(new Dimension(630, 350));
 		INSTANCE.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER));
 		//INSTANCE.setBounds(100, 100, 450, 300);
+		centerFrameOnDesktop(INSTANCE);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel LabelIdLibraryMember = new JLabel("ID");
-		LabelIdLibraryMember.setBounds(38, 11, 18, 14);
+		LabelIdLibraryMember.setBounds(20, 11, 200, 14);
 		contentPane.add(LabelIdLibraryMember);
 		
 		IdValue = new JTextField();
-		IdValue.setBounds(76, 8, 86, 20);
+		IdValue.setBounds(100, 8, 200, 20);
 		contentPane.add(IdValue);
 		IdValue.setColumns(10);
-		
+
+//		First Name
 		JLabel lblNewLabel = new JLabel("First Name");
-		lblNewLabel.setBounds(10, 64, 61, 14);
+		lblNewLabel.setBounds(20, 64, 200, 20);
 		contentPane.add(lblNewLabel);
 		
 		FirstNameValue = new JTextField();
-		FirstNameValue.setBounds(76, 61, 136, 20);
+		FirstNameValue.setBounds(100, 61, 200, 20);
 		contentPane.add(FirstNameValue);
 		FirstNameValue.setColumns(10);
-		
+
+//		Last Name
 		JLabel lblNewLabel_1 = new JLabel("Last Name");
-		lblNewLabel_1.setBounds(222, 64, 61, 14);
+		lblNewLabel_1.setBounds(320, 64, 200, 14);
 		contentPane.add(lblNewLabel_1);
 		
 		LastNameValue = new JTextField();
-		LastNameValue.setBounds(288, 61, 136, 20);
+		LastNameValue.setBounds(388, 61, 200, 20);
 		contentPane.add(LastNameValue);
 		LastNameValue.setColumns(10);
-		
+
+//		Street
 		JLabel lblNewLabel_2 = new JLabel("Street");
 		lblNewLabel_2.setBounds(20, 95, 46, 14);
 		contentPane.add(lblNewLabel_2);
 		
 		StreetValue = new JTextField();
-		StreetValue.setBounds(76, 92, 136, 20);
+		StreetValue.setBounds(100, 92, 200, 20);
 		contentPane.add(StreetValue);
 		StreetValue.setColumns(10);
-		
+
+//		Telephone
+		JLabel Telephone = new JLabel("Telephone");
+		Telephone.setBounds(320, 95, 200, 14);
+		contentPane.add(Telephone);
+
+		TelefoneValue = new JTextField();
+		TelefoneValue.setBounds(388, 93, 200, 20);
+		contentPane.add(TelefoneValue);
+		TelefoneValue.setColumns(10);
+
+//      City
+		lblNewLabel_5 = new JLabel("City");
+		lblNewLabel_5.setBounds(20, 127, 200, 14);
+		contentPane.add(lblNewLabel_5);
+
+		CityValue = new JTextField();
+		CityValue.setBounds(100, 123, 200, 20);
+		contentPane.add(CityValue);
+		CityValue.setColumns(10);
+
+//		State
 		JLabel lblNewLabel_3 = new JLabel("State");
-		lblNewLabel_3.setBounds(242, 127, 37, 14);
+		lblNewLabel_3.setBounds(320, 127, 200, 14);
 		contentPane.add(lblNewLabel_3);
 		
 		StateValue = new JTextField();
-		StateValue.setBounds(288, 124, 136, 20);
+		StateValue.setBounds(388, 124, 200, 20);
 		contentPane.add(StateValue);
 		StateValue.setColumns(10);
-		
+
+//		ZIP
 		JLabel lblNewLabel_4 = new JLabel("Zip");
-		lblNewLabel_4.setBounds(47, 156, 24, 14);
+		lblNewLabel_4.setBounds(20, 156, 50, 14);
 		contentPane.add(lblNewLabel_4);
 		
 		ZipValue = new JTextField();
-		ZipValue.setBounds(76, 153, 136, 20);
+		ZipValue.setBounds(100, 153, 136, 20);
 		contentPane.add(ZipValue);
 		ZipValue.setColumns(10);
 		
-		JLabel Telefone = new JLabel("Telefone");
-		Telefone.setBounds(232, 95, 51, 14);
-		contentPane.add(Telefone);
-		
-		TelefoneValue = new JTextField();
-		TelefoneValue.setBounds(288, 93, 136, 20);
-		contentPane.add(TelefoneValue);
-		TelefoneValue.setColumns(10);
+
 		
 		DataAccessFacade daf = new DataAccessFacade();
-		
-		Button button = new Button("Save");
-		button.addActionListener(new ActionListener() {
+
+		JButton saveButton = new JButton("Save");
+		JButton backButton = new JButton("Back");
+		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					validateEmptyFields();
@@ -138,27 +144,31 @@ public class AddLibrabryMember extends JFrame implements LibWindow{
 				}
 				catch(Exception ex) {
 					System.out.println(ex.getMessage());
-					JOptionPane.showMessageDialog(button, ex.getMessage(), "error", 1);
+					JOptionPane.showMessageDialog(saveButton, ex.getMessage(), "error", 1);
 				}
 			}
 		});
-		button.setBounds(167, 216, 106, 35);
-		contentPane.add(button);
-		
-		lblNewLabel_5 = new JLabel("City");
-		lblNewLabel_5.setBounds(34, 127, 37, 14);
-		contentPane.add(lblNewLabel_5);
-		
-		CityValue = new JTextField();
-		CityValue.setBounds(76, 123, 136, 20);
-		contentPane.add(CityValue);
-		CityValue.setColumns(10);
+
+		backButton.setBounds(200, 216, 106, 35);
+		saveButton.setBounds(320, 216, 106, 35);
+		saveButton.setForeground(Color.BLUE);
+		contentPane.add(saveButton);
+		contentPane.add(backButton);
+		addBackButtonListener(backButton);
+
+
 		exceptions = new JOptionPane();
 		
 		contentPane.add(exceptions);
 	}
 
-	
+
+	private void addBackButtonListener(JButton button) {
+		button.addActionListener(evt -> {
+			LibrarySystem.hideAllWindows();
+			LibrarySystem.INSTANCE.setVisible(true);
+		});
+	}
 	
 	@Override
 	public boolean isInitialized() {
@@ -169,7 +179,6 @@ public class AddLibrabryMember extends JFrame implements LibWindow{
 	@Override
 	public void isInitialized(boolean val) {
 		isInitialized = val;
-		
 	}
 	
 	public void validateEmptyFields() throws Exception{

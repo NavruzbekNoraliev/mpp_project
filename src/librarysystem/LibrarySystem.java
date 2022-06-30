@@ -19,6 +19,8 @@ import javax.swing.UIManager;
 import business.ControllerInterface;
 import business.SystemController;
 
+import static librarysystem.Main.centerFrameOnDesktop;
+
 
 public class LibrarySystem extends JFrame implements LibWindow {
 	ControllerInterface ci = new SystemController();
@@ -113,7 +115,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
     
     class LoginListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
@@ -121,15 +122,12 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
 			LoginWindow.INSTANCE.setVisible(true);
 		}
-    	
     }
     class AllBookIdsListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
 			AllBookIdsWindow.INSTANCE.init();
-			
 			List<String> ids = ci.allBookIds();
 			Collections.sort(ids);
 			StringBuilder sb = new StringBuilder();
@@ -139,27 +137,20 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			System.out.println(sb.toString());
 			AllBookIdsWindow.INSTANCE.setData(sb.toString());
 			AllBookIdsWindow.INSTANCE.pack();
-			//AllBookIdsWindow.INSTANCE.setSize(660,500);
 			Util.centerFrameOnDesktop(AllBookIdsWindow.INSTANCE);
 			AllBookIdsWindow.INSTANCE.setVisible(true);
-			
 		}
-    	
     }
     
     class AllMemberIdsListener implements ActionListener {
-
     	@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
 			AllMemberIdsWindow.INSTANCE.init();
 			AllMemberIdsWindow.INSTANCE.pack();
 			AllMemberIdsWindow.INSTANCE.setVisible(true);
-			
-			
 			LibrarySystem.hideAllWindows();
 			AllBookIdsWindow.INSTANCE.init();
-			
 			List<String> ids = ci.allMemberIds();
 			Collections.sort(ids);
 			StringBuilder sb = new StringBuilder();
@@ -169,13 +160,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			System.out.println(sb.toString());
 			AllMemberIdsWindow.INSTANCE.setData(sb.toString());
 			AllMemberIdsWindow.INSTANCE.pack();
-			//AllMemberIdsWindow.INSTANCE.setSize(660,500);
 			Util.centerFrameOnDesktop(AllMemberIdsWindow.INSTANCE);
 			AllMemberIdsWindow.INSTANCE.setVisible(true);
-			
-			
 		}
-    	
     }
 
     class AddLibrabryMemberListener implements ActionListener{
@@ -183,9 +170,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
-			
 			AddLibrabryMember.INSTANCE.init();
 			AddLibrabryMember.INSTANCE.pack();
+			centerFrameOnDesktop(AddLibrabryMember.INSTANCE);
 			AddLibrabryMember.INSTANCE.setVisible(true);
 		}
     	
@@ -214,5 +201,4 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	public void isInitialized(boolean val) {
 		isInitialized =val;
 	}
-    
 }
