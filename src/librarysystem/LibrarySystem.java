@@ -28,7 +28,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	JPanel mainPanel;
 	JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, addLibraryMember, addBookCopy; 
+    JMenuItem login, allBookIds, checkOverdue, allMemberIds, addLibraryMember, addBookCopy;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -45,10 +45,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	};
     	
 	public static void hideAllWindows() {
-		
 		for(LibWindow frame: allWindows) {
+			System.out.println(frame.getClass().getSimpleName());
 			frame.setVisible(false);
-			
 		}
 	}
     
@@ -96,6 +95,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
  	   menuBar.add(options);
  	   login = new JMenuItem("Logout");
  	   login.addActionListener(new LoginListener());
+		checkOverdue = new JMenuItem("Check Overdue");
+		checkOverdue.addActionListener(new CheckOverDueListener());
  	   allBookIds = new JMenuItem("All Book Ids");
  	   allBookIds.addActionListener(new AllBookIdsListener());
  	   allMemberIds = new JMenuItem("All Member Ids");
@@ -110,6 +111,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
  	   options.add(login);
  	   options.add(allBookIds);
  	   options.add(allMemberIds);
+		options.add(checkOverdue);
  	   options.add(addLibraryMember);
  	   options.add(addBookCopy);
     }
@@ -141,7 +143,18 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			AllBookIdsWindow.INSTANCE.setVisible(true);
 		}
     }
-    
+
+	class CheckOverDueListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LibrarySystem.hideAllWindows();
+			CheckOverdue.INSTANCE.init();
+			CheckOverdue.INSTANCE.setTitle("Check Overdue");
+			CheckOverdue.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Util.centerFrameOnDesktop(CheckOverdue.INSTANCE);
+			CheckOverdue.INSTANCE.setVisible(true);
+		}
+	}
     class AllMemberIdsListener implements ActionListener {
     	@Override
 		public void actionPerformed(ActionEvent e) {

@@ -43,6 +43,7 @@ public class AddLibrabryMember extends JFrame implements LibWindow{
 		INSTANCE.setPreferredSize(new Dimension(630, 350));
 		INSTANCE.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER));
 		//INSTANCE.setBounds(100, 100, 450, 300);
+		INSTANCE.setResizable(false);
 		centerFrameOnDesktop(INSTANCE);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -155,16 +156,14 @@ public class AddLibrabryMember extends JFrame implements LibWindow{
 		contentPane.add(saveButton);
 		contentPane.add(backButton);
 		addBackButtonListener(backButton);
-
-
 		exceptions = new JOptionPane();
-		
 		contentPane.add(exceptions);
 	}
 
 
 	private void addBackButtonListener(JButton button) {
 		button.addActionListener(evt -> {
+			INSTANCE.setVisible(false);
 			LibrarySystem.hideAllWindows();
 			LibrarySystem.INSTANCE.setVisible(true);
 		});
