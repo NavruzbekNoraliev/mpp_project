@@ -146,6 +146,8 @@ public class AddLibrabryMember extends JFrame implements LibWindow {
                     Address a = new Address(StreetValue.getText(), CityValue.getText(), StateValue.getText(), ZipValue.getText());
                     LibraryMember l = new LibraryMember(IdValue.getText(), FirstNameValue.getText(), LastNameValue.getText(), TelefoneValue.getText(), a);
                     daf.saveNewMember(l);
+                    JOptionPane.showMessageDialog(saveButton, "Member Saved!", "Success", 1);
+                    cleanFields();
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                     JOptionPane.showMessageDialog(saveButton, ex.getMessage(), "error", 1);
@@ -165,7 +167,16 @@ public class AddLibrabryMember extends JFrame implements LibWindow {
 
         contentPane.add(exceptions);
     }
-
+    private void cleanFields() {
+    	IdValue.setText("");
+    	FirstNameValue.setText("");
+    	LastNameValue.setText("");
+    	StreetValue.setText("");
+    	TelefoneValue.setText("");
+    	CityValue.setText("");
+    	StateValue.setText("");
+    	ZipValue.setText("");
+    }
 
     private void addBackButtonListener(JButton button) {
         button.addActionListener(evt -> {
