@@ -12,6 +12,10 @@ final public class Author extends Person implements Serializable {
 		super(f, l, t, a);
 		this.bio = bio;
 	}
+	
+	public Author(String f) {
+		super(f,"","", null);
+	}
 
 	private static final long serialVersionUID = 7508481940058530471L;
 }
