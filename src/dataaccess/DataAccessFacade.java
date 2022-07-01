@@ -8,8 +8,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import business.*;
 import dataaccess.DataAccessFacade.StorageType;
@@ -56,19 +58,22 @@ public class DataAccessFacade implements DataAccess {
 				StorageType.MEMBERS);
 	}
 	
-	public boolean isBookCopyAvailable(String isbn) {
+	public String isBookCopyAvailable(String isbn, int bookCopyNumber) {
+//		get book from file
+		HashMap<String,Book> books = (HashMap<String,Book>) readFromStorage(StorageType.BOOKS);
+		String ret = "";
+		
 		HashMap<String, CheckoutRecordEntry> booksCheckedOut = (HashMap<String, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUT);
-		Book b = booksCheckedOut.get(isbn).getBook();
-		boolean ret = false;
-		if(b != null) {
-			for(BookCopy bc : b.getCopies()) {
-				ret = bc.isAvailable();
-				break;
+		for(Map.Entry<String,CheckoutRecordEntry> entry:booksCheckedOut.entrySet()) {
+			
+			if(entry.getValue().getBook().getIsbn().equals(isbn)) {
+				ret = entry.getKey() +";"+ entry.getValue().getDueDate();
 			}
 		}
-		return ret;
 		
+		return ret;
 	}
+
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> readUserMap() {
 		//Returns a Map with name/value pairs being
