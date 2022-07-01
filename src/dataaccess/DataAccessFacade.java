@@ -56,7 +56,19 @@ public class DataAccessFacade implements DataAccess {
 				StorageType.MEMBERS);
 	}
 	
-	
+	public boolean isBookCopyAvailable(String isbn) {
+		HashMap<String, CheckoutRecordEntry> booksCheckedOut = (HashMap<String, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUT);
+		Book b = booksCheckedOut.get(isbn).getBook();
+		boolean ret = false;
+		if(b != null) {
+			for(BookCopy bc : b.getCopies()) {
+				ret = bc.isAvailable();
+				break;
+			}
+		}
+		return ret;
+		
+	}
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> readUserMap() {
 		//Returns a Map with name/value pairs being
