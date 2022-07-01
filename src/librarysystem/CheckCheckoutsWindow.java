@@ -100,8 +100,10 @@ public class CheckCheckoutsWindow extends JFrame implements LibWindow {
     private void defineSearchTextPanel() {
         searchField = new JTextField(18);
         searchBookTextPanel = new JPanel();
+        JLabel jLabel = new JLabel("Member ID");
         searchBookTextPanel.setLayout(new BorderLayout());
-        searchBookTextPanel.add(searchField, BorderLayout.NORTH);
+        searchBookTextPanel.add(searchField, BorderLayout.EAST);
+        searchBookTextPanel.add(jLabel, BorderLayout.WEST);
     }
 
     private void defineMiddleHalf() {
@@ -149,79 +151,76 @@ public class CheckCheckoutsWindow extends JFrame implements LibWindow {
 
     private void addSearchButtonListener(JButton button) {
         button.addActionListener(evt -> {
+
             String memberId = searchField.getText();
-            HashMap<String, CheckoutRecordEntry> ids = ci.allCheckouts();
+            if (memberId.isEmpty()) {
+                JOptionPane.showMessageDialog(button, "Member ID cannot be empty", "Error", 1);
+            } else {
+                HashMap<String, CheckoutRecordEntry> ids = ci.allCheckouts();
+                if (ids.containsKey(memberId)) {
+                    Book book = ids.get(memberId).getBook();
+                    Object[][] data = {{book.getIsbn(), book.getTitle(), book.getNumCopies(), memberId, ids.get(memberId).getDueDate()}};
+                    String column[] = {"ISBN", "TITLE", "COPYNUM", "LIBMEM", "DUE"};
+                    if (table == null) {
+                        table = new JTable(data, column);
+                        middlePanel.add(new JScrollPane(table));
+                        table.setBounds(30, 40, 600, 300);
+                        table.getColumnModel().getColumn(0).setPreferredWidth(300);
+                        middlePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                        middlePanel.add(table);
+                        mainPanel.add(middleHalf, BorderLayout.CENTER);
+                    }
+                    table.setModel(new TableModel() {
+                        @Override
+                        public int getRowCount() {
+                            return 1;
+                        }
 
-            if (ids.containsKey(memberId)) {
-                Book book = ids.get(memberId).getBook();
-                Object[][] data = {{book.getIsbn(), book.getTitle(), book.getNumCopies(), memberId, ids.get(memberId).getDueDate()}};
-                String column[] = {"ISBN", "TITLE", "COPYNUM", "LIBMEM", "DUE"};
-                if (table == null) {
-                    table = new JTable(data, column);
-                    middlePanel.add(new JScrollPane(table));
-                    table.setBounds(30, 40, 600, 300);
-                    table.getColumnModel().getColumn(0).setPreferredWidth(300);
-                    middlePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-                    middlePanel.add(table);
-                    mainPanel.add(middleHalf, BorderLayout.CENTER);
+                        @Override
+                        public int getColumnCount() {
+                            return 5;
+                        }
+
+                        @Override
+                        public String getColumnName(int columnIndex) {
+                            return column[columnIndex];
+                        }
+
+                        @Override
+                        public Class<?> getColumnClass(int columnIndex) {
+                            return Object.class;
+                        }
+
+                        @Override
+                        public boolean isCellEditable(int rowIndex, int columnIndex) {
+                            return false;
+                        }
+
+                        @Override
+                        public Object getValueAt(int rowIndex, int columnIndex) {
+                            return data[rowIndex][columnIndex];
+                        }
+
+                        @Override
+                        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+                            data[rowIndex][columnIndex] = aValue;
+                        }
+
+                        @Override
+                        public void addTableModelListener(TableModelListener l) {
+
+                        }
+
+                        @Override
+                        public void removeTableModelListener(TableModelListener l) {
+
+                        }
+                    });
+                    SwingUtilities.updateComponentTreeUI(CheckCheckoutsWindow.INSTANCE);
+                    System.out.println("added");
+                }else{
+                    JOptionPane.showMessageDialog(button, "This member did not get any book from our library", "Info", 1);
                 }
-                table.setModel(new TableModel() {
-                    @Override
-                    public int getRowCount() {
-                        return 1;
-                    }
-
-                    @Override
-                    public int getColumnCount() {
-                        return 5;
-                    }
-
-                    @Override
-                    public String getColumnName(int columnIndex) {
-                        return column[columnIndex];
-                    }
-
-                    @Override
-                    public Class<?> getColumnClass(int columnIndex) {
-                        return Object.class;
-                    }
-
-                    @Override
-                    public boolean isCellEditable(int rowIndex, int columnIndex) {
-                        return false;
-                    }
-
-                    @Override
-                    public Object getValueAt(int rowIndex, int columnIndex) {
-                        return data[rowIndex][columnIndex];
-                    }
-
-                    @Override
-                    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-                        data[rowIndex][columnIndex] = aValue;
-                    }
-
-                    @Override
-                    public void addTableModelListener(TableModelListener l) {
-
-                    }
-
-                    @Override
-                    public void removeTableModelListener(TableModelListener l) {
-
-                    }
-                });
-                SwingUtilities.updateComponentTreeUI(CheckCheckoutsWindow.INSTANCE);
-                System.out.println("added");
-            }
-
-            StringBuilder sb = new StringBuilder();
-            for (Map.Entry<String, CheckoutRecordEntry> entry : ids.entrySet()) {
-                if (!sb.toString().contains(entry.getKey())) {
-                    sb.append(entry.getKey() + "\n");
-                }
-                sb.append("  " + entry.getValue().getBook().getIsbn() + "  " + entry.getValue().getBook().getTitle()
-                        + "  " + entry.getValue().getBook().getNumCopies() + "\n");
             }
         });
     }

@@ -27,28 +27,31 @@ public class DataAccessFacade implements DataAccess {
 			+ "/src/dataaccess/storage";
 	public static final String DATE_PATTERN = "MM/dd/yyyy";
 
-	// implement: other save operations
+	//save LibraryMember to the file 
 	public void saveNewMember(LibraryMember member) {
 		HashMap<String, LibraryMember> mems = readMemberMap();
 		String memberId = member.getMemberId();
 		mems.put(memberId, member);
 		saveToStorage(StorageType.MEMBERS, mems);
 	}
-
+	
+	//save new Book to the file
 	public void saveNewBook(Book book) {
 		HashMap<String, Book> books = readBooksMap();
 		String isbn = book.getIsbn();
 		books.put(isbn, book);
 		saveToStorage(StorageType.BOOKS, books);
 	}
-
+	
+	//retrieve HashMap<String, Book> from file
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Book> readBooksMap() {
 		// Returns a Map with name/value pairs being
 		// isbn -> Book
 		return (HashMap<String, Book>) readFromStorage(StorageType.BOOKS);
 	}
-
+	
+	//retrieve HashMap<String, LibraryMember> from file
 	@SuppressWarnings("unchecked")
 	public HashMap<String, LibraryMember> readMemberMap() {
 		// Returns a Map with name/value pairs being
@@ -56,24 +59,33 @@ public class DataAccessFacade implements DataAccess {
 		return (HashMap<String, LibraryMember>) readFromStorage(
 				StorageType.MEMBERS);
 	}
-
+	
+	//verify if a book is taken by a library member
 	public String isBookCopyAvailable(String isbn, int bookCopyNumber) {
-		// get book from file
 		HashMap<String, Book> books = (HashMap<String, Book>) readFromStorage(StorageType.BOOKS);
 		String ret = "";
-
-		HashMap<String, CheckoutRecordEntry> booksCheckedOut = (HashMap<String, CheckoutRecordEntry>) readFromStorage(
-				StorageType.CHECKOUT);
+		
+		HashMap<String, CheckoutRecordEntry> booksCheckedOut = (HashMap<String, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUT);
 		for (Map.Entry<String, CheckoutRecordEntry> entry : booksCheckedOut.entrySet()) {
-
+			boolean flag = false;
 			if (entry.getValue().getBook().getIsbn().equals(isbn)) {
-				ret = entry.getKey() + ";" + entry.getValue().getDueDate();
+				for(int i=0; i< entry.getValue().getBook().getCopies().length; i++) {
+					if(entry.getValue().getBook().getCopies()[i].getCopyNum() == bookCopyNumber
+							&& !entry.getValue().getBook().getCopies()[i].isAvailable()) {
+						ret = entry.getKey() +";"+ entry.getValue().getDueDate();
+						flag = true;
+						break;
+					}
+				}
+				if(flag)
+					break;
 			}
 		}
 
 		return ret;
 	}
-
+	
+	//retrieve HashMap<String, User> from file
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> readUserMap() {
 		// Returns a Map with name/value pairs being
@@ -81,9 +93,7 @@ public class DataAccessFacade implements DataAccess {
 		return (HashMap<String, User>) readFromStorage(StorageType.USERS);
 	}
 
-	///// load methods - these place test data into the storage area
-	///// - used just once at startup
-
+	//add a copy in a book and save all the books again to the file
 	public void AddCopyAndSaveToStorage(String isbn) {
 		// retrieve the HashMap<String, Book>() of copy from storage
 		// change the copy of the book and save again
@@ -95,19 +105,19 @@ public class DataAccessFacade implements DataAccess {
 
 		saveToStorage(StorageType.BOOKS, books);
 	}
-
+	//save List<Book> to the file
 	static void loadBookMap(List<Book> bookList) {
 		HashMap<String, Book> books = new HashMap<String, Book>();
 		bookList.forEach(book -> books.put(book.getIsbn(), book));
 		saveToStorage(StorageType.BOOKS, books);
 	}
-
+	//save List<User> to the file
 	static void loadUserMap(List<User> userList) {
 		HashMap<String, User> users = new HashMap<String, User>();
 		userList.forEach(user -> users.put(user.getUsername(), user));
 		saveToStorage(StorageType.USERS, users);
 	}
-
+	//save List<LibraryMember> to the file
 	static void loadMemberMap(List<LibraryMember> memberList) {
 		HashMap<String, LibraryMember> members = new HashMap<String, LibraryMember>();
 		memberList.forEach(member -> members.put(member.getMemberId(), member));
