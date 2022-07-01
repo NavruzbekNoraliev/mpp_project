@@ -73,7 +73,6 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 	                JComboBox comboBox = (JComboBox) event.getSource();
 
 	                Object selected = comboBox.getSelectedItem();
-	                System.out.println(selected);
 	                isbnBookSelected = selected.toString().trim();
 	                //reload the number of copys
 	                refreshNumCopyes();
@@ -135,8 +134,8 @@ public class AddBookCopy extends JDialog implements LibWindow, FocusListener {
 	
 	public void refreshNumCopyes() {
 		DataAccess da = new DataAccessFacade();
-		HashMap<String,BookCopy> li = da.readBookCopysMap();
-        int num = li.get(isbnBookSelected).getCopyNum();
+		HashMap<String,Book> li = da.readBooksMap();
+        int num = li.get(isbnBookSelected).getNumCopies();
     	NumberOfCopyes.setText(String.valueOf(num));
 	}
 

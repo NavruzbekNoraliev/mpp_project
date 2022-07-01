@@ -16,5 +16,4 @@ public interface DataAccess {
     public void deleteBook(String isbn);
     public HashMap<String, CheckoutRecordEntry> readCheckoutRecordMap();
     public boolean createCheckOut(CheckOutRecord checkOutRecord);
-    public HashMap<String,BookCopy> readBookCopysMap();
 }

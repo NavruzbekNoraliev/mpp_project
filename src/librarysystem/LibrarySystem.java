@@ -29,7 +29,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, checkOverdue, checkoutBook, allCheckouts, checkCheckouts, addLibraryMember, addBookCopy;
+    JMenuItem login, allBookIds, allMemberIds, checkOverdue, checkoutBook, allCheckouts, checkCheckouts, addLibraryMember, addBookCopy, addBook;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -42,7 +42,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
             CheckoutBooksWindow.INSTANCE,
             AllCheckoutsWindow.INSTANCE,
             CheckCheckoutsWindow.INSTANCE,
-            AddBookCopy.INSTANCE
+            AddBookCopy.INSTANCE,
+            AddBook.INSTANCE,
     };
 
     public static void hideAllWindows() {
@@ -116,12 +117,18 @@ public class LibrarySystem extends JFrame implements LibWindow {
         addBookCopy = new JMenuItem("Add Book Copy");
         addBookCopy.addActionListener(new AddBookCopyListener());
 
+        addBook = new JMenuItem("Add Book");
+        addBook.addActionListener(new AddBookListener());
+
+
+
         options.add(login);
         options.add(allBookIds);
         options.add(allMemberIds);
         options.add(checkOverdue);
         options.add(addLibraryMember);
         options.add(addBookCopy);
+        options.add(addBook);
         options.add(checkoutBook);
         options.add(allCheckouts);
         options.add(checkCheckouts);
@@ -258,18 +265,17 @@ public class LibrarySystem extends JFrame implements LibWindow {
         // AddLibrabryMember.INSTANCE.setVisible(true);
         // }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            LibrarySystem.hideAllWindows();
-
-            AddLibrabryMember.INSTANCE.init();
-            AddLibrabryMember.INSTANCE.pack();
-            centerFrameOnDesktop(LibrarySystem.INSTANCE);
-            AddLibrabryMember.INSTANCE.setVisible(true);
-        }
-
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LibrarySystem.hideAllWindows();
+	
+			AddLibrabryMember.INSTANCE.init();
+			AddLibrabryMember.INSTANCE.pack();
+			centerFrameOnDesktop(LibrarySystem.INSTANCE);
+			AddLibrabryMember.INSTANCE.setVisible(true);
+		}
     }
-
+    	
     class AddBookCopyListener implements ActionListener {
 
         @Override
@@ -281,6 +287,17 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AddBookCopy.INSTANCE.setVisible(true);
         }
 
+    }
+    
+    class AddBookListener implements ActionListener {
+    	@Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+
+            AddBook.INSTANCE.init();
+            AddBook.INSTANCE.pack();
+            AddBook.INSTANCE.setVisible(true);
+        }
     }
 
     @Override
