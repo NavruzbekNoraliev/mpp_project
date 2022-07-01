@@ -18,14 +18,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
-import business.CheckOutRecord;
 import business.CheckoutRecordEntry;
 import business.ControllerInterface;
 import business.SystemController;
-
-import static librarysystem.Main.centerFrameOnDesktop;
 
 public class LibrarySystem extends JFrame implements LibWindow {
     ControllerInterface ci = new SystemController();
@@ -33,8 +29,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, checkOverdue, checkoutBook, checkouts, addLibraryMember, addBookCopy, addBook;
-
+    JMenuItem login, allBookIds, allMemberIds, checkOverdue, checkoutBook, allCheckouts, checkCheckouts, addLibraryMember, addBookCopy, addBook;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -46,6 +41,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AllBookIdsWindow.INSTANCE,
             CheckoutBooksWindow.INSTANCE,
             AllCheckoutsWindow.INSTANCE,
+            CheckCheckoutsWindow.INSTANCE,
             AddBookCopy.INSTANCE,
             AddBook.INSTANCE,
     };
@@ -111,18 +107,20 @@ public class LibrarySystem extends JFrame implements LibWindow {
         allMemberIds.addActionListener(new AllMemberIdsListener());
         checkoutBook = new JMenuItem("Checkout books");
         checkoutBook.addActionListener(new CheckoutBookListener());
-        checkouts = new JMenuItem("Checkouts list");
-        checkouts.addActionListener(new CheckoutsListener());
+        allCheckouts = new JMenuItem("All Checkouts");
+        allCheckouts.addActionListener(new AllCheckoutsListener());
+        checkCheckouts = new JMenuItem("Check Checkouts");
+        checkCheckouts.addActionListener(new CheckCheckoutsListener());
         addLibraryMember = new JMenuItem("Add Library Member");
         addLibraryMember.addActionListener(new AddLibrabryMemberListener());
 
         addBookCopy = new JMenuItem("Add Book Copy");
         addBookCopy.addActionListener(new AddBookCopyListener());
-        
+
         addBook = new JMenuItem("Add Book");
         addBook.addActionListener(new AddBookListener());
-        
-        
+
+
 
         options.add(login);
         options.add(allBookIds);
@@ -132,7 +130,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
         options.add(addBookCopy);
         options.add(addBook);
         options.add(checkoutBook);
-        options.add(checkouts);
+        options.add(allCheckouts);
+        options.add(checkCheckouts);
     }
 
     class LoginListener implements ActionListener {
@@ -158,7 +157,21 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
     }
 
-    class CheckoutsListener implements ActionListener {
+    class CheckCheckoutsListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LibrarySystem.hideAllWindows();
+            CheckCheckoutsWindow.INSTANCE.init();
+            Util.centerFrameOnDesktop(CheckCheckoutsWindow.INSTANCE);
+            CheckCheckoutsWindow.INSTANCE.setBounds(100,100,600,300);
+            CheckCheckoutsWindow.INSTANCE.setVisible(true);
+
+        }
+
+    }
+
+    class AllCheckoutsListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -170,7 +183,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
             StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, CheckoutRecordEntry> entry : ids.entrySet()) {
                 if (!sb.toString().contains(entry.getKey())) {
-                    sb.append(entry.getKey() + "\n");
+                    sb.append("Member: " + entry.getKey() + "\n");
                 }
                 sb.append("  " + entry.getValue().getBook().getIsbn() + "  " + entry.getValue().getBook().getTitle()
                         + "  " + entry.getValue().getBook().getNumCopies() + "\n");
@@ -243,6 +256,14 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
     class AddLibrabryMemberListener implements ActionListener {
 
+        // @Override
+        // public void actionPerformed(ActionEvent e) {
+        // LibrarySystem.hideAllWindows();
+        // AddLibrabryMember.INSTANCE.init();
+        // AddLibrabryMember.INSTANCE.pack();
+        // centerFrameOnDesktop(AddLibrabryMember.INSTANCE);
+        // AddLibrabryMember.INSTANCE.setVisible(true);
+        // }
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
