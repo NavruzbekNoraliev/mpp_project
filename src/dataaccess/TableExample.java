@@ -70,8 +70,7 @@ public class TableExample extends JFrame {
         scrollPane.getViewport().add(table);
     }
 
-    private void createCustomColumns(JTable table, int width, float[] proportions,
-                                     String[] headers) {
+    private void createCustomColumns(JTable table, int width, float[] proportions, String[] headers) {
         table.setAutoCreateColumnsFromModel(false);
         int num = headers.length;
         for(int i = 0; i < num; ++i) {

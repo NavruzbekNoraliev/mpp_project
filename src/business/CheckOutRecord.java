@@ -36,6 +36,7 @@ public class CheckOutRecord implements Serializable {
         return memberID;
     }
 
+
     @Override
     public String toString() {
         return "CheckOutRecord{" +
