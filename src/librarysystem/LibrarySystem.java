@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import business.CheckoutRecordEntry;
 import business.ControllerInterface;
 import business.SystemController;
+import dataaccess.Auth;
 
 public class LibrarySystem extends JFrame implements LibWindow {
     ControllerInterface ci = new SystemController();
@@ -29,7 +30,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     JPanel mainPanel;
     JMenuBar menuBar;
     JMenu options;
-    JMenuItem login, allBookIds, allMemberIds, checkOverdue, checkoutBook, allCheckouts, checkCheckouts, addLibraryMember, addBookCopy, addBook;
+    JMenuItem logout, allBookIds, allMemberIds, checkOverdue, checkoutBook, allCheckouts, checkCheckouts, addLibraryMember, addBookCopy, addBook;
     String pathToImage;
     private boolean isInitialized = false;
 
@@ -41,6 +42,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
             AllBookIdsWindow.INSTANCE,
             CheckoutBooksWindow.INSTANCE,
             AllCheckoutsWindow.INSTANCE,
+            CheckOverdue.INSTANCE,
             CheckCheckoutsWindow.INSTANCE,
             AddBookCopy.INSTANCE,
             AddBook.INSTANCE,
@@ -97,8 +99,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
     private void addMenuItems() {
         options = new JMenu("Options");
         menuBar.add(options);
-        login = new JMenuItem("Logout");
-        login.addActionListener(new LoginListener());
+        logout = new JMenuItem("Logout");
+        logout.addActionListener(new LogoutListener());
         checkOverdue = new JMenuItem("Check Overdue");
         checkOverdue.addActionListener(new CheckOverDueListener());
         allBookIds = new JMenuItem("All Book Ids");
@@ -122,22 +124,27 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 
 
-        options.add(login);
+        options.add(logout);
         options.add(allBookIds);
         options.add(allMemberIds);
         options.add(checkOverdue);
         options.add(addLibraryMember);
-        options.add(addBookCopy);
-        options.add(addBook);
+        SystemController sc = new SystemController();
+        if(sc.currentAuth == Auth.ADMIN){
+            options.add(addBookCopy);
+            options.add(addBook);
+        }
         options.add(checkoutBook);
         options.add(allCheckouts);
         options.add(checkCheckouts);
     }
 
-    class LoginListener implements ActionListener {
+    class LogoutListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             LibrarySystem.hideAllWindows();
+            LoginWindow.INSTANCE.clear();
+
             LoginWindow.INSTANCE.init();
             Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
             LoginWindow.INSTANCE.setVisible(true);
@@ -166,9 +173,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
             Util.centerFrameOnDesktop(CheckCheckoutsWindow.INSTANCE);
             CheckCheckoutsWindow.INSTANCE.setBounds(100,100,600,300);
             CheckCheckoutsWindow.INSTANCE.setVisible(true);
-
         }
-
     }
 
     class AllCheckoutsListener implements ActionListener {

@@ -7,6 +7,7 @@ import dataaccess.DataAccessFacade;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 public class CheckOverdue extends JFrame implements LibWindow {
@@ -72,8 +73,6 @@ public class CheckOverdue extends JFrame implements LibWindow {
         isInitialized(true);
         pack();
         setSize(380, 250);
-
-
     }
 
     private void defineUpperHalf() {
@@ -91,6 +90,7 @@ public class CheckOverdue extends JFrame implements LibWindow {
         defineSearchTextPanel();
         topPanel.add(searchBookTextPanel);
         topPanel.add(searchButton);
+
     }
 
     private void defineSearchBtn() {
@@ -100,6 +100,8 @@ public class CheckOverdue extends JFrame implements LibWindow {
 
     private void defineSearchTextPanel() {
         isbn = new JTextField(18);
+        isbn.setForeground(Color.GRAY);
+        isbn.setText("Type ISBN");
         searchBookTextPanel = new JPanel();
         searchBookTextPanel.setLayout(new BorderLayout());
         searchBookTextPanel.add(isbn, BorderLayout.NORTH);
@@ -120,13 +122,12 @@ public class CheckOverdue extends JFrame implements LibWindow {
         addBackButtonListener(backButton);
         lowerHalf.add(backButton);
     }
-    
+
     private String[][] generateData(Book book) {
         int rowLength = book.getCopies().length;
         String[][] data = new String[rowLength][5];
         BookCopy[] bookCopies = book.getCopies();
         DataAccessFacade d = new DataAccessFacade();
-
 
 
         for (int i = 0; i < rowLength; i++) {
@@ -135,8 +136,8 @@ public class CheckOverdue extends JFrame implements LibWindow {
             data[i][0] = book.getIsbn();
             data[i][1] = book.getTitle();
             data[i][2] = String.valueOf(bookCopies[i].getCopyNum());
-            data[i][3] = j !=""? s[0]: "none";
-            data[i][4] = j !=""? s[1]: "available";
+            data[i][3] = j != "" ? s[0] : "none";
+            data[i][4] = j != "" ? s[1] : "available";
         }
         System.out.println(Arrays.deepToString(data));
         return data;

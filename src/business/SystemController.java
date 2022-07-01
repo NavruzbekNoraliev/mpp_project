@@ -42,6 +42,11 @@ public class SystemController implements ControllerInterface {
         return retval;
     }
 
+    public void logout(){
+        currentAuth = null;
+    }
+
+
 
     @Override
     public void deleteBook(String isbn) {

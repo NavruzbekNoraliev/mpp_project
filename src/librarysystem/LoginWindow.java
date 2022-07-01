@@ -41,6 +41,8 @@ public class LoginWindow extends JFrame implements LibWindow {
     private JTextField messageBar = new JTextField();
     public void clear() {
         messageBar.setText("");
+        username.setText("");
+        password.setText("");
     }
 
     /* This class is a singleton */
