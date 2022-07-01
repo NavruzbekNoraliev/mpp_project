@@ -158,13 +158,13 @@ public class CheckCheckoutsWindow extends JFrame implements LibWindow {
                 String column[] = {"ISBN", "TITLE", "COPYNUM", "LIBMEM", "DUE"};
                 if (table == null) {
                     table = new JTable(data, column);
+                    middlePanel.add(new JScrollPane(table));
+                    table.setBounds(30, 40, 600, 300);
+                    table.getColumnModel().getColumn(0).setPreferredWidth(300);
+                    middlePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                    middlePanel.add(table);
+                    mainPanel.add(middleHalf, BorderLayout.CENTER);
                 }
-                middlePanel.add(new JScrollPane(table));
-                table.setBounds(30, 40, 600, 300);
-                table.getColumnModel().getColumn(0).setPreferredWidth(300);
-                middlePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-                middlePanel.add(table);
-                mainPanel.add(middleHalf, BorderLayout.CENTER);
                 table.setModel(new TableModel() {
                     @Override
                     public int getRowCount() {
