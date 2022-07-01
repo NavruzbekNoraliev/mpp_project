@@ -60,14 +60,19 @@ public class DataAccessFacade implements DataAccess {
 	
 	public String isBookCopyAvailable(String isbn, int bookCopyNumber) {
 //		get book from file
-		HashMap<String,Book> books = (HashMap<String,Book>) readFromStorage(StorageType.BOOKS);
+//		HashMap<String,Book> books = (HashMap<String,Book>) readFromStorage(StorageType.BOOKS);
 		String ret = "";
 		
 		HashMap<String, CheckoutRecordEntry> booksCheckedOut = (HashMap<String, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUT);
 		for(Map.Entry<String,CheckoutRecordEntry> entry:booksCheckedOut.entrySet()) {
 			
 			if(entry.getValue().getBook().getIsbn().equals(isbn)) {
-				ret = entry.getKey() +";"+ entry.getValue().getDueDate();
+				for(int i=0; i< entry.getValue().getBook().getCopies().length; i++) {
+					if(entry.getValue().getBook().getCopies()[i].getCopyNum() == bookCopyNumber) {
+						ret = entry.getKey() +";"+ entry.getValue().getDueDate();
+					}
+				}
+				
 			}
 		}
 		
