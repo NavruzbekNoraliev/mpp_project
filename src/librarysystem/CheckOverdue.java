@@ -100,7 +100,6 @@ public class CheckOverdue extends JFrame implements LibWindow {
 
     private void defineSearchTextPanel() {
         isbn = new JTextField(18);
-        isbn.setForeground(Color.GRAY);
         isbn.setText("Type ISBN");
         searchBookTextPanel = new JPanel();
         searchBookTextPanel.setLayout(new BorderLayout());
