@@ -170,11 +170,16 @@ public class CheckOverdue extends JFrame implements LibWindow {
 
     private void addSearchButtonListener(JButton button) {
         button.addActionListener(evt -> {
-            DataAccessFacade d = new DataAccessFacade();
-            selectedBook = d.getBookByIsbn(isbn.getText().trim());
-            popularizeTable();
-            upperHalf.add(middlePanel, BorderLayout.CENTER);
-            SwingUtilities.updateComponentTreeUI(mainPanel);
+        	if(isbn.getText().isEmpty())
+        		JOptionPane.showMessageDialog(button, "ISBN field cannot be empty", "error", 1);
+        	else {
+        		DataAccessFacade d = new DataAccessFacade();
+                selectedBook = d.getBookByIsbn(isbn.getText().trim());
+                popularizeTable();
+                upperHalf.add(middlePanel, BorderLayout.CENTER);
+                SwingUtilities.updateComponentTreeUI(mainPanel);
+        	}
+            
         });
     }
 }
